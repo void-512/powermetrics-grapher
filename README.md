@@ -25,3 +25,5 @@ Submit, and figure(s) will be shown
 The graphs will be displayed according to 3 classes: Frequency, Usage, and Power.
 
 Each class will be shown in a separated figure
+
+Need pandas, matplotlib, and tkinter
