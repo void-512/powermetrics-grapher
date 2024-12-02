@@ -6,19 +6,6 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 
-cpu_count = 8
-
-def arg_reader():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-l", type=str, required=True, help="Log file path")
-    args = parser.parse_args()
-    if not os.path.isfile(args.l):
-        sys.exit("File doesn't exist")
-    else:
-        return args.l
-
-log = arg_reader()
-
 def extract_pattern(pattern, dtype):
     file = open(log, 'r')
     results = []
@@ -40,6 +27,23 @@ def extract_pattern(pattern, dtype):
             print(f"An error occurred: {e}")
 
     return results
+
+def cpu_counter():
+    pattern = r'CPU\s*(\d):'
+    return max(extract_pattern(pattern, 'i')) + 1
+
+def arg_reader():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-l", type=str, required=True, help="Log file path")
+    args = parser.parse_args()
+    if not os.path.isfile(args.l):
+        sys.exit("File doesn't exist")
+    else:
+        return args.l
+
+log = arg_reader()
+cpu_count = cpu_counter()
+print(cpu_count)
 
 def get_sample_time():
     pattern = r'Sampled system activity \(([A-Za-z]{3} [A-Za-z]{3} \d{2} \d{2}:\d{2}:\d{2} \d{4})'
