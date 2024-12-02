@@ -41,12 +41,8 @@ def arg_reader():
     else:
         return args.l
 
-log = arg_reader()
-cpu_count = cpu_counter()
-print(cpu_count)
-
 def get_sample_time():
-    pattern = r'Sampled system activity \(([A-Za-z]{3} [A-Za-z]{3} \d{2} \d{2}:\d{2}:\d{2} \d{4})'
+    pattern = r'Sampled system activity \(([A-Za-z]{3} [A-Za-z]{3}\s*\d+ \d{2}:\d{2}:\d{2} \d{4})'
     sample_time_list = extract_pattern(pattern, 'd')
     start_time = sample_time_list[0]
     for i in range(len(sample_time_list)):
@@ -173,3 +169,6 @@ def dfconstructor():
     label_list.append('SOC Power')
 
     return pd.DataFrame(np.transpose(combined_list).tolist(), columns=label_list)
+
+log = arg_reader()
+cpu_count = cpu_counter()
