@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def display_usage(lot, dfusage):
+def display_usage(lot, dfusage, save):
     if dfusage.empty:
         return
     plt.figure(figsize=(10, 6))
@@ -11,8 +11,10 @@ def display_usage(lot, dfusage):
         plt.plot(lot, dfusage[column], label=column)
     plt.legend()
     plt.grid(True)
+    if save:
+        plt.savefig('Usage.png')
 
-def display_frequency(lot, dffrequency):
+def display_frequency(lot, dffrequency, save):
     if dffrequency.empty:
         return
     plt.figure(figsize=(10, 6))
@@ -23,8 +25,10 @@ def display_frequency(lot, dffrequency):
         plt.plot(lot, dffrequency[column], label=column)
     plt.legend()
     plt.grid(True)
+    if save:
+        plt.savefig('Frequency.png')
 
-def display_power(lot, dfpower):
+def display_power(lot, dfpower, save):
     if dfpower.empty:
         return
     plt.figure(figsize=(10, 6))
@@ -35,9 +39,12 @@ def display_power(lot, dfpower):
         plt.plot(lot, dfpower[column], label=column)
     plt.legend()
     plt.grid(True)
+    if save:
+        plt.savefig('Power.png')
 
-def display(lot, dfusage, dffrequency, dfpower):
-    display_usage(lot, dfusage)
-    display_frequency(lot, dffrequency)
-    display_power(lot, dfpower)
-    plt.show()
+def display(lot, dfusage, dffrequency, dfpower, save):
+    display_usage(lot, dfusage, save)
+    display_frequency(lot, dffrequency, save)
+    display_power(lot, dfpower, save)
+    if not save: 
+        plt.show()

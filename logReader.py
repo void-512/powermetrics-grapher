@@ -1,10 +1,10 @@
 import re
-import os
-import sys
-import argparse
+import argReader
 import numpy as np
 import pandas as pd
 from datetime import datetime
+
+log = argReader.log
 
 def extract_pattern(pattern, dtype):
     file = open(log, 'r')
@@ -31,15 +31,6 @@ def extract_pattern(pattern, dtype):
 def cpu_counter():
     pattern = r'CPU\s*(\d):'
     return max(extract_pattern(pattern, 'i')) + 1
-
-def arg_reader():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-l", type=str, required=True, help="Log file path")
-    args = parser.parse_args()
-    if not os.path.isfile(args.l):
-        sys.exit("File doesn't exist")
-    else:
-        return args.l
 
 def get_sample_time():
     pattern = r'Sampled system activity \(([A-Za-z]{3} [A-Za-z]{3}\s*\d+ \d{2}:\d{2}:\d{2} \d{4})'
@@ -170,5 +161,4 @@ def dfconstructor():
 
     return pd.DataFrame(np.transpose(combined_list).tolist(), columns=label_list)
 
-log = arg_reader()
 cpu_count = cpu_counter()
