@@ -10,11 +10,11 @@ sudo powermetrics -o log.txt
 
 Use following command to run the program and specify the log file, '-s' to save the figures
 ```
-./pmGrapher -l <log file> [-s]
+./pm-visualizer -l <log file> [-s]
 ```
 or
 ```
-python main.py -l <log file> [-s]
+python pm-visualizer.py -l <log file> [-s]
 ```
 
 Choose items in checkbox to select items to display
