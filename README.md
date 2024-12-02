@@ -8,13 +8,13 @@ Use following command to generate log through powermetrics:
 sudo powermetrics -o log.txt
 ```
 
-Use following command to run the program and specify the log file
+Use following command to run the program and specify the log file, '-s' to save the figures
 ```
-./pmGrapher -l <log file>
+./pmGrapher -l <log file> [-s]
 ```
 or
 ```
-python main.py -l <log file>
+python main.py -l <log file> [-s]
 ```
 
 Choose items in checkbox to select items to display
