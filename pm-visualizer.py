@@ -1,3 +1,4 @@
+import os
 import grapher
 import logReader
 import argReader
@@ -39,5 +40,26 @@ def get_selected(df):
 
     root.mainloop()
 
+def update_no_gui(selected_items, df):
+    lot = df['Sample Time'].tolist()
+    dfusage = df[selected_items].filter(like='Usage')
+    dffrequency = df[selected_items].filter(like='Frequency')
+    dfpower = df[selected_items].filter(like='Power')
+    grapher.display(lot, dfusage, dffrequency, dfpower, save)
 
-get_selected(logReader.dfconstructor())
+def get_selected_no_gui(df):
+    options = df.columns[1:]
+    for i in range(len(options)):
+        print(str(i) + '\t' + options[i])
+    print("Enter the items you want to graph:")
+    print("eg. 1 3 5 6")
+    idx = list(map(int, input().split()))
+    cols = [options[i] for i in idx]
+    update_no_gui(cols, df)
+
+if bool(os.environ.get("DISPLAY")):
+    get_selected(logReader.dfconstructor())
+else:
+    save = True
+    print("No GUI detected, using command shell")
+    get_selected_no_gui(logReader.dfconstructor())
