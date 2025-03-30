@@ -3,6 +3,7 @@ import argReader
 import numpy as np
 import pandas as pd
 from datetime import datetime
+import multiprocessing
 
 log = argReader.log
 
@@ -107,6 +108,79 @@ def get_SOC_power():
     SOC_power_list = extract_pattern(pattern, 'i')
     return SOC_power_list
 
+def fetch_data(func):
+    return func()
+
+# This function is re-implemented by ChatGPT with multiprocessing
+# Cost nearly half time compared with original constructor (0.71s -> 0.35s)
+def dfconstructor():
+    
+    
+    # Define functions to be called in parallel
+    functions = {
+        "sample_time": get_sample_time,
+        "cpu_freq": get_cpu_freq,
+        "E_cluster_freq": get_E_cluster_freq,
+        "P_cluster_freq": get_P_cluster_freq,
+        "cpu_usage": get_cpu_usage,
+        "E_cluster_usage": get_E_cluster_usage,
+        "P_cluster_usage": get_P_cluster_usage,
+        "CPU_power": get_CPU_power,
+        "GPU_freq": get_GPU_freq,
+        "GPU_usage": get_GPU_usage,
+        "GPU_power": get_GPU_power,
+        "ANE_power": get_ANE_power,
+        "SOC_power": get_SOC_power,
+    }
+    
+    # Use multiprocessing to fetch data in parallel
+    with multiprocessing.Pool(processes=len(functions)) as pool:
+        results_list = pool.map(fetch_data, functions.values())
+    
+    # Store results in a dictionary with the correct order
+    results = dict(zip(functions.keys(), results_list))
+    
+    # Construct the combined list in the correct order
+    combined_list = [
+        results["sample_time"],
+        *results["cpu_freq"],
+        results["E_cluster_freq"],
+        results["P_cluster_freq"],
+        *results["cpu_usage"],
+        results["E_cluster_usage"],
+        results["P_cluster_usage"],
+        results["CPU_power"],
+        results["GPU_freq"],
+        results["GPU_usage"],
+        results["GPU_power"],
+        results["ANE_power"],
+        results["SOC_power"],
+    ]
+    
+    # Generate labels
+    cpuid_freq_label = [f'CPU {cpuid} Frequency' for cpuid in range(cpu_count)]
+    cpuid_usage_label = [f'CPU {cpuid} Usage' for cpuid in range(cpu_count)]
+    
+    label_list = [
+        'Sample Time',
+        *cpuid_freq_label,
+        'E-Cluster Frequency',
+        'P-Cluster Frequency',
+        *cpuid_usage_label,
+        'E-Cluster Usage',
+        'P-Cluster Usage',
+        'CPU Power',
+        'GPU Frequency',
+        'GPU Usage',
+        'GPU Power',
+        'ANE Power',
+        'SOC Power'
+    ]
+    
+    return pd.DataFrame(np.transpose(combined_list).tolist(), columns=label_list)
+
+# Original dfconstructor
+'''
 def dfconstructor():
     sample_time = get_sample_time()
     cpu_freq = get_cpu_freq()
@@ -160,5 +234,6 @@ def dfconstructor():
     label_list.append('SOC Power')
 
     return pd.DataFrame(np.transpose(combined_list).tolist(), columns=label_list)
+'''
 
 cpu_count = cpu_counter()
