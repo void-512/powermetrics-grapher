@@ -111,6 +111,8 @@ def get_SOC_power():
 def fetch_data(func):
     return func()
 
+'''
+
 # This function is re-implemented by ChatGPT with multiprocessing
 # Cost nearly half time compared with original constructor (0.71s -> 0.35s)
 def dfconstructor():
@@ -178,9 +180,10 @@ def dfconstructor():
     ]
     
     return pd.DataFrame(np.transpose(combined_list).tolist(), columns=label_list)
+'''
 
 # Original dfconstructor
-'''
+
 def dfconstructor():
     sample_time = get_sample_time()
     cpu_freq = get_cpu_freq()
@@ -234,6 +237,6 @@ def dfconstructor():
     label_list.append('SOC Power')
 
     return pd.DataFrame(np.transpose(combined_list).tolist(), columns=label_list)
-'''
+
 
 cpu_count = cpu_counter()
